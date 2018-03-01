@@ -20,7 +20,7 @@ set.seed(1)
 # If you knit to HTML for proofreading purposes, the following can be useful. If intending to knit to HTML you'll want to add the following to the YAML Header in place of "pdf document: ..." and all following parameters.
 # html_document: 
 #     self_contained: yes
-#     css: path/to/yourcssfile.css
+#     css: full path to included bootstrap.min.css C:\Users\[Your Username]\[Your R Root Directory]\win-library\3.4\DA5030\rmarkdown\templates\DA 5030 Rmd\resources\bootstrap.min.css
 #     highlight: zenburn
 #     keep_md: no
 #     theme: spacelab
@@ -64,3 +64,4 @@ for (i in seq_along(Q)) {
 }
 sapply(Q.form, FUN="cat",sep='\n',simplify=T)
 ```
+
