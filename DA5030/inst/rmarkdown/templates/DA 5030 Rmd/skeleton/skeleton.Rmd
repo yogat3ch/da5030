@@ -1,0 +1,66 @@
+---
+title: "LastName_FirstnameInitial_Assignment#"
+author: "Full Name"
+date: '`r format(Sys.time(), "%Y-%m-%d")`'
+always_allow_html: yes
+header-includes:
+   - \usepackage{dcolumn}
+output: 
+  pdf_document: 
+  toc: no
+  latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+# Knitr Options
+knitr::opts_chunk$set(echo = TRUE, message=FALSE,warning=FALSE,cache=TRUE, fig.align='center', fig.height=5, fig.width=7, tidy=TRUE, tidy.opts=list(width.cutoff=80))
+# Make reproducible
+set.seed(1)
+# ----------------------- Thu Mar 01 08:59:11 2018 ------------------------#
+# If you knit to HTML for proofreading purposes, the following can be useful. If intending to knit to HTML you'll want to add the following to the YAML Header in place of "pdf document: ..." and all following parameters.
+# html_document: 
+#     self_contained: yes
+#     css: path/to/yourcssfile.css
+#     highlight: zenburn
+#     keep_md: no
+#     theme: spacelab
+#     toc: yes
+#     toc_float: true
+# Here are the HTML dependencies - Uncomment them if knitting to HTML
+# require("htmltools")
+# library(knitr)
+# knit_print.data.frame = function(x, ...) {
+#     res = paste(c("", "", kable(x)), collapse = "\n")
+#     asis_output(res)
+# }
+# 
+# rmarkdown::html_dependency_jquery()
+# rmarkdown::html_dependency_bootstrap("spacelab")
+# rmarkdown::html_dependency_jqueryui()
+
+# Load packages
+require("tidyverse")
+require("dplyr")
+
+```
+```{r 'Assignment',eval=F}
+#Set Assignment html below
+require("rvest")
+# This code will extract the assignment HTML and print the output formatted for this Rmd document. Set the URL for the assignment in the read_html f(n)
+
+# Use if assignment is made up of list items (li)
+Q <- read_html("https://da5030.weebly.com/assignment-4.html") %>% html_nodes(xpath="//div[contains(@class,'paragraph')]/ol/li")
+for (i in seq_along(Q)) {
+  Q[i] <- Q[i]  %>% gsub("<li>",paste("## ",i,"\n<div class='q'>",sep=""),.,perl=T) %>% gsub("</li>",paste("\n</div>\n<p class='a'>\n```{r '",i,"'}\n```\n</p>",sep=""),.,perl=T) %>%  str_split("\n")
+}
+sapply(Q, FUN="cat",sep='\n',simplify=T)
+
+# Use if assignment has h2 question titles and div questions
+Q <- read_html("https://da5030.weebly.com/assignment-5.html") %>% html_nodes(xpath="//h2[contains(@class,'wsite-content-title')]/font[contains(@color,'#24678d')]")
+Qtext <- read_html("https://da5030.weebly.com/assignment-5.html") %>% html_nodes(xpath="//h2[contains(@class,'wsite-content-title')]/font[contains(@color,'#24678d')]/parent::h2/following-sibling::div[contains(@class,'paragraph')][1]")
+Q.form <- vector()
+for (i in seq_along(Q)) {
+  Q.form[i] <- Q[i] %>% html_text %>% paste("## ",.,"\n<div class='q'>",sep="") %>% paste(html_text(Qtext[i]),sep="") %>% paste("\n</div>\n<p class='a'>\n```{r '",i,"'}\n```\n</p>\n",sep="") %>%  str_split("\n")
+}
+sapply(Q.form, FUN="cat",sep='\n',simplify=T)
+```
