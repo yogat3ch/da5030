@@ -1,0 +1,157 @@
+---
+title: "6"
+author: "Stephen Synchronicity"
+date: '`r format(Sys.time(), "%Y-%m-%d")`'
+always_allow_html: yes
+header-includes:
+   - \usepackage{dcolumn}
+output: 
+  pdf_document: 
+  toc: no
+  latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+# Knitr Options
+knitr::opts_chunk$set(echo = TRUE, message=FALSE,warning=FALSE,cache=TRUE, fig.align='center', fig.height=3.5, fig.width=5, tidy=TRUE, tidy.opts=list(width.cutoff=80)) 
+library(knitr)
+knit_print.data.frame = function(x, ...) {
+    res = paste(c("", "", kable(x)), collapse = "\n")
+    asis_output(res)
+}
+# Attach dependencies
+rmarkdown::html_dependency_jquery()
+rmarkdown::html_dependency_bootstrap("spacelab")
+rmarkdown::html_dependency_jqueryui()
+# Make reproducible
+set.seed(1)
+# Load packages
+require("tidyverse")
+require("dplyr")
+require("htmltools")
+require("rvest")
+```
+```{r 'Assignment',eval=F}
+# This code will extract the assignment HTML and print the output formatted for this Rmd document. Set Assignment html below
+# Use if assignment is made up of list items
+Q <- read_html("https://da5030.weebly.com/assignment-6.html") %>% html_nodes(xpath="//div[contains(@class,'paragraph')]/ol | //div[contains(@class,'paragraph')]/ul")
+L <- vector("list",length(Q))
+for (i in seq_along(Q)) {
+  for (m in seq_along(xml_children(Q[[i]]))) {
+    print(m)
+    L[[i]][m] <- xml_children(Q[[i]])[m]  %>% gsub("<li>",paste("### ",i,letters[m],"\n<div class='q'>",sep=""),.,perl=T) %>% gsub("</li>",paste("\n</div>\n<p class='a'>\n```{r '",i,letters[m],"'}\n```\n</p>",sep=""),.,perl=T) %>%  str_split("\n")
+  }
+  
+}
+lapply(L, function(x){sapply(unlist(x),FUN="cat",sep='\n',simplify=T)})
+# Use if assignment has h2 headers and div questions
+Q <- read_html("https://da5030.weebly.com/assignment-6.html") %>% html_nodes(xpath="//h2[contains(@class,'wsite-content-title')]/font[contains(@color,'#24678d')]")
+Qtext <- read_html("https://da5030.weebly.com/assignment-6.html") %>% html_nodes(xpath="//h2[contains(@class,'wsite-content-title')]/font[contains(@color,'#24678d')]/parent::h2/following-sibling::div[contains(@class,'paragraph')][1]")
+Q.form <- vector()
+for (i in seq_along(Q)) {
+  Q.form[i] <- Q[i] %>% html_text %>% paste("## ",.,"\n<div class='q'>",sep="") %>% paste(html_text(Qtext[i]),sep="") %>% paste("\n</div>\n<p class='a'>\n```{r '",i,"'}\n```\n</p>\n",sep="") %>%  str_split("\n")
+}
+sapply(Q.form, FUN="cat",sep='\n',simplify=T)
+```
+
+## Problem 1 (60 Points)
+<div class='q'>Download the data set on student achievement in secondary education math education of two Portuguese schools (use the data set Students Math). Using any packages you wish, complete the following tasks:
+</div>
+
+
+### 1a
+<div class='q'>(10 pts) Create scatter plots and pairwise correlations between four continuous variables and the final grade (G3) using the <em>pairs.panels()</em> function in R. Pick the variables you believe are most useful.
+</div>
+<p class='a'>
+```{r '1a'}
+```
+</p>
+
+### 1b
+<div class='q'>(10 pts) Build a multiple regression model predicting final math grade (G3) using as many features as you like but you must use at least four. Include at least one categorical variables and be sure to properly convert it to dummy codes. Select the features that you believe are useful -- you do not have to include all features.
+</div>
+<p class='a'>
+```{r '1b'}
+```
+</p>
+
+### 1c
+<div class='q'>(20 pts) Use stepwise backward elimination to remove all non-significant variables and then state the final model as an equation. State the backward elimination measure you applied (<em>p</em>-value, AIC, Adjusted R2). This <a href="https://www.youtube.com/watch?v=TzhgPXrFSm8&amp;t=434s" target="_blank">tutorial shows how to use various feature elimination techniques</a>.
+</div>
+<p class='a'>
+```{r '1c'}
+```
+</p>
+
+### 1d
+<div class='q'>(10 pts) Calculate the 95% confidence interval for a prediction -- you may choose any data you wish for some new student.
+</div>
+<p class='a'>
+```{r '1d'}
+```
+</p>
+
+### 1e
+<div class='q'>(10 pts) What is the <em>RMSE </em>for this model -- use the entire data set for both training and validation. You may find the <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/residuals.html" target="_blank"><em>residuals()</em> function</a> useful. Alternatively, you can inspect the model object, <em>e.g.</em>, if your model is in the variable <em>m</em>, then the residuals (errors) are in <em>m$residuals</em> and your predicted values (fitted values) are in <em>m$fitted.values</em>.
+</div>
+<p class='a'>
+```{r '1e'}
+```
+</p>
+
+## Problem 2 (40 Points)
+<div class='q'>For this problem, the following short tutorial might be helpful in interpreting the logistic regression output.
+</div>
+
+### 2a
+<div class='q'>(5 pts) Using the same data set as in Problem (1), add another column, PF -- pass-fail. Mark any student whose final grade is less than 10 as F, otherwise as P and then build a dummy code variable for that new column. Use the new dummy variable column as the response variable.
+</div>
+<p class='a'>
+```{r '2a'}
+```
+</p>
+
+### 2b
+<div class='q'>(10 pts) Build a binomial logistic regression model classifying a student as passing or failing. Eliminate any non-significant variable using an elimination approach of your choice. <span style="color:rgb(85, 85, 85)">Use as many features as you like but you must use at least four -- choose the ones you believe are most useful.</span>
+
+</div>
+<p class='a'>
+```{r '2b'}
+```
+</p>
+
+### 2c
+<div class='q'>(5 pts) State the regression equation.
+</div>
+<p class='a'>
+```{r '2c'}
+```
+</p>
+
+### 2d
+<div class='q'>(20 pts) What is the accuracy of your model? Use the entire data set for both training and validation.
+</div>
+<p class='a'>
+```{r '2d'}
+```
+</p>
+
+## Problem 3 (10 Points)
+<div class='q'>(8 pts) Implement the example from the textbook on pages 205 to 217 for the data set on white wines.(2 pts) Calculate the RMSE for the model.
+</div>
+
+### 3a
+<div class='q'>(8 pts) Implement the example from the textbook on pages 205 to 217 for the <a href="/uploads/8/6/5/9/8659576/whitewines.csv" target="_blank">data set on white wines</a>.
+</div>
+<p class='a'>
+```{r '3a'}
+```
+</p>
+
+### 3b
+<div class='q'>(2 pts) Calculate the RMSE for the model.
+</div>
+<p class='a'>
+```{r '3b'}
+```
+</p>
