@@ -1,0 +1,206 @@
+---
+title: "Lastname_FirstInitial_P2"
+author: "Fullname"
+date: '`r format(Sys.time(), "%Y-%m-%d")`'
+always_allow_html: yes
+header-includes:
+   - \usepackage{dcolumn}
+output: 
+  pdf_document: 
+  toc: no
+  latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+# Knitr Options
+knitr::opts_chunk$set(echo = , message=FALSE,warning=FALSE,cache=, fig.align='center', fig.height=3.5, fig.width=5, tidy=, tidy.opts=list(width.cutoff=80))
+library(knitr)
+knit_print.data.frame = function(x, ...) {
+    res = paste(c("", "", kable(x)), collapse = "\n")
+    asis_output(res)
+}
+options(scipen=12)
+# Attach dependencies
+rmarkdown::html_dependency_jquery()
+rmarkdown::html_dependency_bootstrap("spacelab")
+rmarkdown::html_dependency_jqueryui()
+# Make reproducible
+set.seed(1)
+# Load packages
+require("tidyverse")
+require("dplyr")
+require("htmltools")
+require("rvest")
+```
+```{r 'Assignment',eval=F}
+# This code will extract the assignment HTML and print the output formatted for this Rmd document. Set Assignment html below
+# Use if assignment has blue font headers, and lists of questions
+Q <- read_html("https://da5030.weebly.com/practicum-2.html") %>% html_nodes(xpath="//font[contains(@color,'#24678d')]/ancestor::div[1]")
+Qtext <- read_html("https://da5030.weebly.com/practicum-2.html") %>% html_nodes(xpath="//font[contains(@color,'#24678d')]/ancestor::div[1]/following-sibling::div[contains(@class,'paragraph')][1]")
+Q.form <- vector("list",length(Q))
+for (i in seq_along(Q)) {
+ Q.form[[i]] <- list(title=NA,Qs=NA)
+  Q.form[[i]][["title"]] <- Q[i] %>% html_node(css="font") %>% html_text %>% paste("# ",.,"\n",sep="") 
+   
+    li <- xml_contents(Qtext[[i]]) %>% xml_children() %>% html_text
+    for (l in seq_along(li)) {
+    Q.form[[i]][['Qs']][l] <- paste("## ",i,letters[l],"\n<div class='q'>",li[l],"\n</div>\n<p class='a'>\n```{r '",i,letters[l],"'}\n```\n</p>",sep="")
+  }
+}
+lapply(unlist(Q.form), FUN="cat",sep='\n',simplify=T)
+```
+
+# Problem 1  (60 Points)
+
+## 1a
+<div class='q'>(0 pts) Download the data set Census Income Data for Adults along with its explanation. Note that the data file does not contain header names; you may wish to add those. The description of each column can be found in the data set explanation. 
+</div>
+<p class='a'>
+```{r '1a'}
+```
+</p>
+
+## 1b
+<div class='q'>(0 pts) Explore the data set as you see fit and that allows you to get a sense of the data and get comfortable with it. Is there distributional skew in any of the features? Is there a need to apply a transform? 
+</div>
+<p class='a'>
+```{r '1b'}
+```
+</p>
+
+## 1c
+<div class='q'>(10 pts) Create a frequency and then a likelihood table for the categorical features in the data set. Build your own Naive Bayes classifier for those features.
+</div>
+<p class='a'>
+```{r '1c'}
+```
+</p>
+
+## 1d
+<div class='q'>(30 pts)Predict the binomial class membership for a white male adult who is a federal government worker with a bachelors degree who immigrated from Ireland. Ignore any other features in your model. You must build your own Naive Bayes Classifier -- you may not use a package.
+</div>
+<p class='a'>
+```{r '1d'}
+```
+</p>
+
+## 1e
+<div class='q'>(20 pts) Perform 10-fold cross validation on your algorithm to tune it and report the final accuracy results.
+</div>
+<p class='a'>
+```{r '1e'}
+```
+</p>
+
+# Problem 2 (50 Points)
+
+
+## 2a
+<div class='q'>(10 pts) Are there outliers in the data set? If so, what is the appropriate action and how are they discovered?
+</div>
+<p class='a'>
+```{r '2a'}
+```
+</p>
+
+## 2b
+<div class='q'>(5 pts) Using visual analysis of the sales price with a histogram, is the data normally distributed and thus amenable to parametric statistical analysis? What are the correlations to the response variable and are there collinearities?
+</div>
+<p class='a'>
+```{r '2b'}
+```
+</p>
+
+## 2c
+<div class='q'>(2 pts) Is the presence or absence of UFFI alone enough to predict the value of a residential property?
+</div>
+<p class='a'>
+```{r '2c'}
+```
+</p>
+
+## 2d
+<div class='q'>(4 pts) Is UFFI a significant predictor variable of selling price when taken with the full set of variables available?
+</div>
+<p class='a'>
+```{r '2d'}
+```
+</p>
+
+## 2e
+<div class='q'>(15 pts) What is the ideal multiple regression model for predicting home prices in this data set? Provide a detailed analysis of the model, including Adjusted R-Squared, RMSE, and p-values of principal components. Use backfitting to build the model.
+</div>
+<p class='a'>
+```{r '2e'}
+```
+</p>
+
+## 2f
+<div class='q'>(5 pts) On average, how do we expect UFFI will change the value of a property?
+</div>
+<p class='a'>
+```{r '2f'}
+```
+</p>
+
+## 2g
+<div class='q'>(5 pts) If the home in question is older than 45 years old, doesn’t have a finished basement, has a lot area of 5000 square feet, has a brick exterior, 2 enclosed parking spaces, 1700 square feet of living space, central air, and no pool, what is its predicted value and what are the 95% confidence intervals of this home with UFFI and without UFFI?
+</div>
+<p class='a'>
+```{r '2g'}
+```
+</p>
+
+## 2h
+<div class='q'>(4 pts) If $215,000 was paid for this home, by how much, if any, did the client overpay, and how much compensation is justified due to overpayment?
+</div>
+<p class='a'>
+```{r '2h'}
+```
+</p>
+
+# Problem 3 (30 Points)
+
+
+## 3a
+<div class='q'>(5 pts) Divide the provided Titanic Survival Data into two subsets: a training data set and a test data set. Use whatever strategy you believe it best. Justify your answer.
+</div>
+<p class='a'>
+```{r '3a'}
+```
+</p>
+
+## 3b
+<div class='q'>(13 pts) Construct a logistic regression model to predict the probability of a passenger surviving the Titanic accident. Test the statistical significance of all parameters and eliminate those that have a p-value > 0.05 using stepwise backward elimination.
+</div>
+<p class='a'>
+```{r '3b'}
+```
+</p>
+
+## 3c
+<div class='q'>(2 pts) State the model as a regression equation.
+</div>
+<p class='a'>
+```{r '3c'}
+```
+</p>
+
+## 3d
+<div class='q'>(10 pts) Test the model against the test data set and determine its prediction accuracy (as a percentage correct).
+</div>
+<p class='a'>
+```{r '3d'}
+```
+</p>
+
+# Problem 4 (10 Points)
+
+
+## 4a
+<div class='q'>(10 pts) Elaborate on the use of kNN and Naive Bayes for data imputation. Explain in reasonable detail how you would use these algorithms to impute missing data and why it can work.
+</div>
+<p class='a'>
+```{r '4a'}
+```
+</p>
